@@ -1,3 +1,2 @@
 # 2024 Rapid Acceleration
-
-4593 Rapid Acceleration's Robot Code for 2024 FRC Crescendo
+Robot Code for Team 4593 Rapid Acceleration | 2024 FRC Season: Crescendo.
