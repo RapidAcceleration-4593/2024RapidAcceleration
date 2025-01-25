@@ -84,7 +84,7 @@ public class PrimarySubsystem extends SubsystemBase {
     private CANBusStatus CANInfo = CANBus.getStatus("rio");
 
     public void periodic() {
-        primaryNeckEncoderValue = primaryNeckEncoder.get();
+        primaryNeckEncoderValue = primaryNeckEncoder.get() / -2;
         
         camera.setLED(VisionLEDMode.kOff);
 
@@ -116,9 +116,9 @@ public class PrimarySubsystem extends SubsystemBase {
             }
         }
 
-        // ManageNeckStates();
-        // UpdatePIDConstants();
-        // ManageEncoderFailure();
+        ManageNeckStates();
+        UpdatePIDConstants();
+        ManageEncoderFailure();
 
         // System.out.println("<--------------->");
         // System.out.println("Goal: " + neckGoalAngle);
@@ -205,13 +205,13 @@ public class PrimarySubsystem extends SubsystemBase {
                 NeckSetRotateSpeed(neckRotateController.calculate(primaryNeckEncoderValue, neckGoalAngle));
             }
 
-            // ManageLimitSwitches();
+            ManageLimitSwitches();
         } else {
             siccLEDS.set(0.87);
         }
 
         if (!bottomLimitSwitch.get() && currentNeckState == NeckStates.INTAKE) {
-            // primaryNeckEncoder.reset();
+            primaryNeckEncoder.reset();
             secondaryNeckEncoder.reset();
             NeckSetRotateSpeed(0.0);
         }

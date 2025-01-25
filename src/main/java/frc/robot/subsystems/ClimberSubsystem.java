@@ -1,13 +1,13 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
 
 public class ClimberSubsystem extends SubsystemBase {
     
     // Define Empty CANSparkMax Motor Controller Object
-    private final CANSparkMax climberMotor = ClimberConstants.climberMotor;
+    private final PWMSparkMax climberMotor = ClimberConstants.climberMotor;;
 
     public void ClimberUp() {
         // Run Climber Up when command is called
