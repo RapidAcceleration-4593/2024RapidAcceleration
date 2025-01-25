@@ -10,11 +10,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.ElevatorConstants.ElevatorLevel;
 import frc.robot.subsystems.*;
 import frc.robot.commands.AutoCommands.*;
 import frc.robot.commands.BeakCommands.Intake.*;
 import frc.robot.commands.BeakCommands.Shooter.*;
-import frc.robot.commands.ClimberCommands.*;
+import frc.robot.commands.ElevatorCommands.MaintainElevatorLevel;
+import frc.robot.commands.ElevatorCommands.RaiseElevatorToLevel;
 import frc.robot.commands.PrimaryCommands.ManualControl.*;
 import frc.robot.commands.PrimaryCommands.PresetPositions.*;
 import frc.robot.commands.PrimaryCommands.Vision.*;
@@ -31,7 +33,7 @@ public class RobotContainer
 {
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
-  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   private final PrimarySubsystem primarySubsystem = new PrimarySubsystem();
 
   private final CommandXboxController driverXbox = new CommandXboxController(0);
@@ -64,25 +66,34 @@ public class RobotContainer
         primarySubsystem.returnCamera()
     );
 
+    elevatorSubsystem.setDefaultCommand(new MaintainElevatorLevel(elevatorSubsystem));
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocityAprilTagAlignment);
   }
 
   private void configureBindings()
   {
+    /*BooleanSupplier elevatorBottomLSPressedSupplier = elevatorSubsystem::isBottomLimitSwitchPressed;
+    Trigger elevatorBottomLSPressedTrigger = new Trigger(elevatorBottomLSPressedSupplier);
+    elevatorBottomLSPressedTrigger.onTrue(elevatorSubsystem.resetEncoderCommand());
+
+    BooleanSupplier elevatorTopLSPressedSupplier = elevatorSubsystem::isTopLimitSwitchPressed;
+    Trigger elevatorTopLSPressedTrigger = new Trigger(elevatorTopLSPressedSupplier);
+    elevatorTopLSPressedTrigger.onTrue(elevatorSubsystem.configureSetpointForTopOfElevatorCommand());
+*/
     // Driver Controller
     driverXbox.back().onTrue(Commands.runOnce(drivebase::zeroGyro));
 
-    driverXbox.y().whileTrue(new NeckUp(primarySubsystem));
-    driverXbox.y().whileFalse(new NeckStop(primarySubsystem));
-    driverXbox.a().whileTrue(new NeckDown(primarySubsystem));
-    driverXbox.a().whileFalse(new NeckStop(primarySubsystem));
+    //driverXbox.b().onTrue(elevatorSubsystem.togglePIDEnabledCommand());   
+    //driverXbox.x().onTrue(elevatorSubsystem.resetEncoderCommand());
 
-    driverXbox.povUp().whileTrue(new ClimberUp(climberSubsystem));
-    driverXbox.povUp().whileFalse(new ClimberStop(climberSubsystem));
+    driverXbox.a().whileTrue(elevatorSubsystem.moveElevatorDownCommand());        
+    driverXbox.y().whileTrue(elevatorSubsystem.moveElevatorUpCommand());
     
-    driverXbox.povDown().whileTrue(new ClimberDown(climberSubsystem));
-    driverXbox.povDown().whileFalse(new ClimberStop(climberSubsystem));
-
+    driverXbox.povUp().onTrue(new RaiseElevatorToLevel(elevatorSubsystem, ElevatorLevel.L1));
+    driverXbox.povRight().onTrue(new RaiseElevatorToLevel(elevatorSubsystem, ElevatorLevel.L2));
+    driverXbox.povDown().onTrue(new RaiseElevatorToLevel(elevatorSubsystem, ElevatorLevel.L3));
+    driverXbox.povLeft().onTrue(new RaiseElevatorToLevel(elevatorSubsystem, ElevatorLevel.L4));
+    
     // Auxilary Controller
     auxXbox.back().onTrue(new ManualControlEnabled(primarySubsystem));
     auxXbox.start().onTrue(new ManualControlDisabled(primarySubsystem));
