@@ -13,7 +13,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import swervelib.math.Matter;
 
 /**
@@ -27,47 +26,48 @@ public final class Constants
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
 
-  public static final class NeckConstants {
+  public static final class ArmConstants {
     public static final CANSparkMax leftGearbox1 = new CANSparkMax(19, MotorType.kBrushless);
     public static final CANSparkMax leftGearbox2 = new CANSparkMax(20, MotorType.kBrushless);
     public static final CANSparkMax rightGearbox1 = new CANSparkMax(8, MotorType.kBrushless);
     public static final CANSparkMax rightGearbox2 = new CANSparkMax(9, MotorType.kBrushless);
+    
     public static final DigitalInput topLimitSwitch = new DigitalInput(4);
     public static final DigitalInput bottomLimitSwitch = new DigitalInput(1);
-    public static final Encoder primaryNeckEncoder = new Encoder(2, 3);
-    public static final Encoder secondaryNeckEncoder = new Encoder(6, 7);
+
+    public static final Encoder primaryNeckEncoder = new Encoder(8, 9);
+    // public static final Encoder secondaryNeckEncoder = new Encoder(6, 7);
+  
+    public static final double PID_THRESHOLD = 5;
+
+    public enum ArmStates {
+      INTAKE,
+      SUBWOOFER,
+      YEET,
+      AMP
+    }
   }
 
-  public static final class BeakConstants {
-    public static final PWMSparkMax bumperIntakeMotor = new PWMSparkMax(4);
-    public static final PWMSparkMax beakIntakeMotor = new PWMSparkMax(0);
+  public static final class IntakeConstants {
     public static final PWMSparkMax shooterTopMotor = new PWMSparkMax(1);
     public static final PWMSparkMax shooterBottomMotor = new PWMSparkMax(3);
-    public static final DigitalInput intakeLimitSwitch = new DigitalInput(0);
   }
 
   public static final class ClimberConstants {
     public static final PWMSparkMax climberMotor = new PWMSparkMax(2);
   }
 
-  public static final class LEDConstants {
-    public static final Spark SiccLEDs = new Spark(5);
-  }
-
-  public static final class AutonConstants
-  {
+  public static final class AutonConstants {
     public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
     public static final PIDConstants ANGLE_PID   = new PIDConstants(0.4, 0.0, 0.01);
   }
 
-  public static final class DrivebaseConstants
-  {
+  public static final class DrivebaseConstants {
     // Hold time on motor brakes when disabled
     public static final double WHEEL_LOCK_TIME = 10; // seconds
   }
 
-  public static class OperatorConstants
-  {
+  public static class OperatorConstants {
     // Joystick Deadband
     public static final double LEFT_X_DEADBAND  = 0.1;
     public static final double LEFT_Y_DEADBAND  = 0.1;
