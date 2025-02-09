@@ -108,22 +108,21 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     private void handleTopLimitSwitchPressed() {
-        armPIDController.setSetpoint(getEncoderValue());
-
-        if (getArmSetpoint() < getEncoderValue()) {
-            setArmSpeed(armPIDController.calculate(getEncoderValue(), getArmSetpoint()));
-        } else {
-            stopArmMotors();
+        if (armPIDController.getSetpoint() > getEncoderValue()) {
+            armPIDController.setSetpoint(getEncoderValue());
         }
+
+        setArmSpeed(armPIDController.calculate(getEncoderValue(), getArmSetpoint()));
     }
 
     private void handleBottomLimitSwitchPressed() {
-        if (getArmSetpoint() > 0) {
-            setArmSpeed(armPIDController.calculate(getEncoderValue(), getArmSetpoint()));
-        } else {
-            stopArmMotors();
-            resetArmEncoder();
+        resetArmEncoder();
+
+        if (armPIDController.getSetpoint() < getEncoderValue()) {
+            armPIDController.setSetpoint(getEncoderValue());
         }
+
+        setArmSpeed(armPIDController.calculate(getEncoderValue(), getArmSetpoint()));
     }
 
     private boolean isTopLimitSwitchPressed() {
