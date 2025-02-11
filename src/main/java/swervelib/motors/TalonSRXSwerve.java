@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.Timer;
 import swervelib.encoders.SwerveAbsoluteEncoder;
 import swervelib.math.SwerveMath;
 import swervelib.parser.PIDFConfig;
@@ -33,7 +34,7 @@ public class TalonSRXSwerve extends SwerveMotor
   /**
    * TalonSRX motor controller.
    */
-  private final WPI_TalonSRX motor;
+  WPI_TalonSRX motor;
   /**
    * The position conversion factor to convert raw sensor units to Meters Per 100ms, or Ticks to Degrees.
    */
@@ -227,6 +228,7 @@ public class TalonSRXSwerve extends SwerveMotor
   @Override
   public void setInverted(boolean inverted)
   {
+    Timer.delay(1);
     motor.setInverted(inverted);
   }
 

@@ -8,28 +8,28 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.Optional;
 
 /**
- * SwerveIMU interface for the {@link WPI_PigeonIMU}.
+ * SwerveIMU interface for the Pigeon.
  */
 public class PigeonSwerve extends SwerveIMU
 {
 
   /**
-   * {@link WPI_PigeonIMU} IMU device.
+   * Pigeon v1 IMU device.
    */
-  private final WPI_PigeonIMU imu;
+  WPI_PigeonIMU imu;
   /**
-   * Offset for the {@link WPI_PigeonIMU}.
+   * Offset for the Pigeon.
    */
-  private       Rotation3d    offset      = new Rotation3d();
+  private Rotation3d offset      = new Rotation3d();
   /**
    * Inversion for the gyro
    */
-  private       boolean       invertedIMU = false;
+  private boolean    invertedIMU = false;
 
   /**
-   * Generate the SwerveIMU for {@link WPI_PigeonIMU}.
+   * Generate the SwerveIMU for pigeon.
    *
-   * @param canid CAN ID for the {@link WPI_PigeonIMU}, does not support CANBus.
+   * @param canid CAN ID for the pigeon, does not support CANBus.
    */
   public PigeonSwerve(int canid)
   {
@@ -116,17 +116,7 @@ public class PigeonSwerve extends SwerveIMU
   }
 
   /**
-   * Fetch the rotation rate from the IMU in degrees per second. If rotation rate isn't supported returns empty.
-   *
-   * @return {@link Double} of the rotation rate as an {@link Optional}.
-   */
-  public double getRate()
-  {
-    return imu.getRate();
-  }
-
-  /**
-   * Get the instantiated {@link WPI_PigeonIMU} IMU object.
+   * Get the instantiated IMU object.
    *
    * @return IMU object.
    */

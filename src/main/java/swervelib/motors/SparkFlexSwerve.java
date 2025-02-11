@@ -12,7 +12,6 @@ import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAnalogSensor;
 import com.revrobotics.SparkPIDController;
-import edu.wpi.first.wpilibj.Timer;
 import java.util.function.Supplier;
 import swervelib.encoders.SwerveAbsoluteEncoder;
 import swervelib.parser.PIDFConfig;
@@ -26,9 +25,9 @@ public class SparkFlexSwerve extends SwerveMotor
 {
 
   /**
-   * {@link CANSparkFlex} Instance.
+   * SparkMAX Instance.
    */
-  private final CANSparkFlex motor;
+  public  CANSparkFlex          motor;
   /**
    * Integrated encoder.
    */
@@ -109,7 +108,6 @@ public class SparkFlexSwerve extends SwerveMotor
       {
         return;
       }
-      Timer.delay(0.01);
     }
     failureConfiguring.set(true);
   }
@@ -202,11 +200,7 @@ public class SparkFlexSwerve extends SwerveMotor
   @Override
   public SwerveMotor setAbsoluteEncoder(SwerveAbsoluteEncoder encoder)
   {
-    if (encoder == null)
-    {
-      absoluteEncoder = null;
-      configureSparkFlex(() -> pid.setFeedbackDevice(this.encoder));
-    } else if (encoder.getAbsoluteEncoder() instanceof MotorFeedbackSensor)
+    if (encoder.getAbsoluteEncoder() instanceof MotorFeedbackSensor)
     {
       absoluteEncoderOffsetWarning.set(true);
       absoluteEncoder = encoder;
@@ -331,10 +325,7 @@ public class SparkFlexSwerve extends SwerveMotor
   @Override
   public void setInverted(boolean inverted)
   {
-    configureSparkFlex(() -> {
-      motor.setInverted(inverted);
-      return motor.getLastError();
-    });
+    motor.setInverted(inverted);
   }
 
   /**

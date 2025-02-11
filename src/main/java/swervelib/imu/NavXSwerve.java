@@ -11,7 +11,7 @@ import java.util.Optional;
 import swervelib.telemetry.Alert;
 
 /**
- * Communicates with the NavX({@link AHRS}) as the IMU.
+ * Communicates with the NavX as the IMU.
  */
 public class NavXSwerve extends SwerveIMU
 {
@@ -19,7 +19,7 @@ public class NavXSwerve extends SwerveIMU
   /**
    * NavX IMU.
    */
-  private AHRS       imu;
+  private AHRS       gyro;
   /**
    * Offset for the NavX.
    */
@@ -34,7 +34,7 @@ public class NavXSwerve extends SwerveIMU
   private Alert      navXError;
 
   /**
-   * Constructor for the NavX({@link AHRS}) swerve.
+   * Constructor for the NavX swerve.
    *
    * @param port Serial Port to connect to.
    */
@@ -46,9 +46,9 @@ public class NavXSwerve extends SwerveIMU
       /* Communicate w/navX-MXP via the MXP SPI Bus.                                     */
       /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
       /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
-      imu = new AHRS(port);
+      gyro = new AHRS(port);
       factoryDefault();
-      SmartDashboard.putData(imu);
+      SmartDashboard.putData(gyro);
     } catch (RuntimeException ex)
     {
       navXError.setText("Error instantiating NavX: " + ex.getMessage());
@@ -57,7 +57,7 @@ public class NavXSwerve extends SwerveIMU
   }
 
   /**
-   * Constructor for the NavX({@link AHRS}) swerve.
+   * Constructor for the NavX swerve.
    *
    * @param port SPI Port to connect to.
    */
@@ -68,9 +68,9 @@ public class NavXSwerve extends SwerveIMU
       /* Communicate w/navX-MXP via the MXP SPI Bus.                                     */
       /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
       /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
-      imu = new AHRS(port);
+      gyro = new AHRS(port);
       factoryDefault();
-      SmartDashboard.putData(imu);
+      SmartDashboard.putData(gyro);
     } catch (RuntimeException ex)
     {
       navXError.setText("Error instantiating NavX: " + ex.getMessage());
@@ -79,7 +79,7 @@ public class NavXSwerve extends SwerveIMU
   }
 
   /**
-   * Constructor for the NavX({@link AHRS}) swerve.
+   * Constructor for the NavX swerve.
    *
    * @param port I2C Port to connect to.
    */
@@ -90,9 +90,9 @@ public class NavXSwerve extends SwerveIMU
       /* Communicate w/navX-MXP via the MXP SPI Bus.                                     */
       /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
       /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
-      imu = new AHRS(port);
+      gyro = new AHRS(port);
       factoryDefault();
-      SmartDashboard.putData(imu);
+      SmartDashboard.putData(gyro);
     } catch (RuntimeException ex)
     {
       navXError.setText("Error instantiating NavX: " + ex.getMessage());
@@ -101,14 +101,13 @@ public class NavXSwerve extends SwerveIMU
   }
 
   /**
-   * Reset offset to current gyro reading. Does not call NavX({@link AHRS#reset()}) because it has been reported to be
-   * too slow.
+   * Reset IMU to factory default.
    */
   @Override
   public void factoryDefault()
   {
     // gyro.reset(); // Reported to be slow
-    offset = imu.getRotation3d();
+    offset = gyro.getRotation3d();
   }
 
   /**
@@ -147,7 +146,7 @@ public class NavXSwerve extends SwerveIMU
   @Override
   public Rotation3d getRawRotation3d()
   {
-    return invertedIMU ? imu.getRotation3d().unaryMinus() : imu.getRotation3d();
+    return invertedIMU ? gyro.getRotation3d().unaryMinus() : gyro.getRotation3d();
   }
 
   /**
@@ -172,30 +171,20 @@ public class NavXSwerve extends SwerveIMU
   {
     return Optional.of(
         new Translation3d(
-            imu.getWorldLinearAccelX(),
-            imu.getWorldLinearAccelY(),
-            imu.getWorldLinearAccelZ())
+            gyro.getWorldLinearAccelX(),
+            gyro.getWorldLinearAccelY(),
+            gyro.getWorldLinearAccelZ())
             .times(9.81));
   }
 
   /**
-   * Fetch the rotation rate from the IMU in degrees per second. If rotation rate isn't supported returns empty.
-   *
-   * @return {@link Double} of the rotation rate as an {@link Optional}.
-   */
-  public double getRate()
-  {
-    return imu.getRate();
-  }
-
-  /**
-   * Get the instantiated NavX({@link AHRS}) IMU object.
+   * Get the instantiated IMU object.
    *
    * @return IMU object.
    */
   @Override
   public Object getIMU()
   {
-    return imu;
+    return gyro;
   }
 }
