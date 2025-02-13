@@ -23,11 +23,12 @@ public class ArmSubsystem extends SubsystemBase {
 
     private final Encoder armEncoder = ArmConstants.primaryNeckEncoder;
 
-    private final PIDController armPIDController = new PIDController(0, 0, 0);
+    private final PIDController armPIDController = new PIDController(ArmConstants.ARM_PID.kP, ArmConstants.ARM_PID.kI, ArmConstants.ARM_PID.kD);
 
     private final double[] setpoints = {0, 40, 100, 250};
 
     public ArmSubsystem() {
+        
         // leftGearbox1.setIdleMode(IdleMode.kBrake);
         // leftGearbox2.setIdleMode(IdleMode.kBrake);
         // rightGearbox1.setIdleMode(IdleMode.kBrake);
@@ -51,6 +52,11 @@ public class ArmSubsystem extends SubsystemBase {
 
     // Default Command
     public void maintainArmState() {
+        System.out.println("Setpoint: " + armPIDController.getSetpoint() +
+                            "\nEncoder: " + getEncoderValue() +
+                            "\nTop LS Pressed: " + isTopLimitSwitchPressed() +
+                            "\nPID Output: " + armPIDController.calculate(getEncoderValue())
+                            );
         if (isTopLimitSwitchPressed() && isBottomLimitSwitchPressed()) {
             // System Malfunction.
             stopArmMotors();
@@ -69,42 +75,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     private void updatePIDConstants(double encoder, double setpoint, double threshold) {
-        double error = Math.abs(setpoint - encoder);
-        double difference = encoder - setpoint;
-        double kP, kI, kD;
-
-        if (error <= 20 && setpoint != setpoints[0] && setpoint != setpoints[3]) {
-            // Close Controller
-            kP = 0.0155;
-            kI = 0.00125;
-            kD = 0;
-            armPIDController.setPID(kP, kI, kD);
-            setArmSpeed((armPIDController.calculate(encoder, setpoint)));
-        } else if (difference < 0 && encoder < 200 && setpoint != setpoints[0]) {
-            // Up Controller
-            kP = 0.0015;
-            kI = 0;
-            kD = 0;
-            armPIDController.setPID(kP, kI, kD);
-            setArmSpeed((armPIDController.calculate(encoder, setpoint)));
-        } else if (difference > 0 && encoder > 25 && encoder < 350 && setpoint != setpoints[3]) {
-            // Down Controller
-            kP = 0.0022;
-            kI = 0;
-            kD = 0;
-            armPIDController.setPID(kP, kI, kD);
-            setArmSpeed((armPIDController.calculate(encoder, setpoint)));
-        }
-
-        // if (!isBottomLimitSwitchPressed() && setpoint == setpoints[0] && encoder <= 25 && encoder > 3) {
-        //     setArmSpeed(-0.12);
-        // }
-
-        // if (!isTopLimitSwitchPressed()) {
-        //     if (setpoint == setpoints[3] && encoder >= 200 && encoder < 290) {
-        //         setArmSpeed(0.16);
-        //     }
-        // }
+        setArmSpeed(armPIDController.calculate(encoder, setpoint));;;
     }
 
     private void handleTopLimitSwitchPressed() {
@@ -112,7 +83,11 @@ public class ArmSubsystem extends SubsystemBase {
             armPIDController.setSetpoint(getEncoderValue());
         }
 
-        setArmSpeed(armPIDController.calculate(getEncoderValue(), getArmSetpoint()));
+        if (leftGearbox1.get() > 0.05) {
+            setArmSpeed(0);
+        }
+
+        updatePIDConstants(getEncoderValue(), getArmSetpoint(), ArmConstants.PID_THRESHOLD);
     }
 
     private void handleBottomLimitSwitchPressed() {
@@ -122,7 +97,11 @@ public class ArmSubsystem extends SubsystemBase {
             armPIDController.setSetpoint(getEncoderValue());
         }
 
-        setArmSpeed(armPIDController.calculate(getEncoderValue(), getArmSetpoint()));
+        if (leftGearbox1.get() < -0.05) {
+            setArmSpeed(0);
+        }
+
+        updatePIDConstants(getEncoderValue(), getArmSetpoint(), ArmConstants.PID_THRESHOLD);
     }
 
     private boolean isTopLimitSwitchPressed() {

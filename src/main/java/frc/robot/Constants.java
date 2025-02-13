@@ -37,7 +37,8 @@ public final class Constants
 
     public static final Encoder primaryNeckEncoder = new Encoder(8, 9);
     // public static final Encoder secondaryNeckEncoder = new Encoder(6, 7);
-  
+    
+    public static final PIDConstants ARM_PID = new PIDConstants(0.004, 0, 0.0014);
     public static final double PID_THRESHOLD = 5;
 
     public enum ArmStates {
