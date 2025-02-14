@@ -3,22 +3,22 @@ package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class RunShooterCommand extends Command {
+public class RunIntakeCommand extends Command {
     
     private final IntakeSubsystem intakeSubsystem;
 
-    public RunShooterCommand(IntakeSubsystem subsystem) {
+    public RunIntakeCommand(IntakeSubsystem subsystem) {
         this.intakeSubsystem = subsystem;
         addRequirements(subsystem);
     }
 
     @Override
     public void execute() {
-        intakeSubsystem.runShooter();
+        intakeSubsystem.startIntake();
     }
 
     @Override
     public void end(boolean interrupted) {
-        intakeSubsystem.stopShooter();
+        intakeSubsystem.stopIntake();
     }
 }

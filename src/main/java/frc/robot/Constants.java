@@ -52,6 +52,11 @@ public final class Constants
   public static final class IntakeConstants {
     public static final PWMSparkMax shooterTopMotor = new PWMSparkMax(1);
     public static final PWMSparkMax shooterBottomMotor = new PWMSparkMax(3);
+
+    public static final PWMSparkMax bumperIntakeMotor = new PWMSparkMax(4);
+    public static final PWMSparkMax beakIntakeMotor = new PWMSparkMax(0);
+    
+    public static final DigitalInput intakeLimitSwitch = new DigitalInput(0);
   }
 
   public static final class ClimberConstants {

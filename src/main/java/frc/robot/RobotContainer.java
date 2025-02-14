@@ -14,7 +14,9 @@ import frc.robot.Constants.ArmConstants.ArmStates;
 import frc.robot.subsystems.*;
 import frc.robot.commands.arm.MaintainArmState;
 import frc.robot.commands.arm.SetArmSetpoint;
+import frc.robot.commands.intake.RunIntakeCommand;
 import frc.robot.commands.intake.RunShooterCommand;
+import frc.robot.commands.intake.ShootCommand;
 
 import java.io.File;
 
@@ -54,7 +56,8 @@ public class RobotContainer {
     driverController.povUp().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.AMP));
     driverController.povRight().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.YEET));
 
-    driverController.rightBumper().whileTrue(new RunShooterCommand(intakeSubsystem));
+    driverController.rightBumper().onTrue(new ShootCommand(intakeSubsystem));
+    driverController.leftBumper().whileTrue(new RunIntakeCommand(intakeSubsystem));
   }
 
   // Use this method to pass the autonomous command to the main class
