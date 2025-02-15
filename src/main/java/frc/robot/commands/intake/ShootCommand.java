@@ -1,5 +1,6 @@
 package frc.robot.commands.intake;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem;
 
@@ -12,18 +13,18 @@ public class ShootCommand extends Command {
     public ShootCommand(IntakeSubsystem subsystem) {
         this.intakeSubsystem = subsystem;
         addRequirements(subsystem);
-        shooterTimer.start()
+        shooterTimer.start();
     }
 
     @Override
     public void execute() {
-        intakeSubsystem.runShooter()
+        intakeSubsystem.runShooter();
 
         if (shooterTimer.get() < 0.75F) {
             return;
         }
         intakeSubsystem.startIntake();
-        intakeTimer.start()
+        intakeTimer.start();
     }
     
     @Override
@@ -34,8 +35,8 @@ public class ShootCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         intakeSubsystem.stopIntake();
-        intakeSubsystem.stopShooter()
-        shooterTimer.stop()
-        intakeTimer.stop()
+        intakeSubsystem.stopShooter();
+        shooterTimer.stop();
+        intakeTimer.stop();
     }
 }
