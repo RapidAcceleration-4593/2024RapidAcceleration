@@ -56,9 +56,10 @@ public class RobotContainer {
     driverController.povUp().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.AMP));
     driverController.povRight().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.YEET));
 
-    driverController.rightBumper().onTrue(new ShootCommand(intakeSubsystem));
+    driverController.rightBumper().onTrue(new ShootCommand(intakeSubsystem, armSubsystem));
     driverController.leftBumper().whileTrue(new RunIntakeCommand(intakeSubsystem));
   }
+  
 
   // Use this method to pass the autonomous command to the main class
   public Command getAutonomousCommand() {

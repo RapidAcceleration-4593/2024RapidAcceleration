@@ -27,12 +27,16 @@ public class IntakeSubsystem extends SubsystemBase {
         beakIntakeMotor.set(-speed);
     }
     
-    public void startIntake() {
+    public void intake() {
         if (!bottomLimitSwitch.get() && !intakeLimitSwitch.get()) {
             setIntakeSpeed(1);
         } else {
             stopIntake();
         }
+    }
+
+    public void runArmIntake() {
+        beakIntakeMotor.set(-1);
     }
 
     public void outtake() {
@@ -44,8 +48,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void runShooter() {
-        shooterTopMotor.set(1.0);
-        shooterBottomMotor.set(1.0);
+        setShooterSpeed(.3);
     }
     
     public void stopShooter() {

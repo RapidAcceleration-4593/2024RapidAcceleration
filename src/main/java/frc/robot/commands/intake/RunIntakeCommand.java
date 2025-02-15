@@ -14,7 +14,7 @@ public class RunIntakeCommand extends Command {
 
     @Override
     public void execute() {
-        intakeSubsystem.startIntake();
+        intakeSubsystem.intake();
     }
 
     @Override
