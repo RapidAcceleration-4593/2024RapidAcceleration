@@ -15,7 +15,6 @@ import frc.robot.subsystems.*;
 import frc.robot.commands.arm.MaintainArmState;
 import frc.robot.commands.arm.SetArmSetpoint;
 import frc.robot.commands.intake.RunIntakeCommand;
-import frc.robot.commands.intake.RunShooterCommand;
 import frc.robot.commands.intake.ShootCommand;
 
 import java.io.File;
@@ -34,6 +33,7 @@ public class RobotContainer {
 
   // Controller(s)
   private final CommandXboxController driverController = new CommandXboxController(0);
+  private final CommandXboxController auxController = new CommandXboxController(1);
 
   Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
         () -> MathUtil.applyDeadband(driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
@@ -51,13 +51,13 @@ public class RobotContainer {
     // Driver Controller
     driverController.back().onTrue(Commands.runOnce(drivebase::zeroGyro));
 
-    driverController.povDown().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.INTAKE));
-    driverController.povLeft().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.SUBWOOFER));
-    driverController.povUp().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.AMP));
-    driverController.povRight().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.YEET));
+    auxController.povDown().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.INTAKE));
+    auxController.povLeft().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.SUBWOOFER));
+    auxController.povUp().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.AMP));
+    auxController.povRight().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.YEET));
 
-    driverController.rightBumper().onTrue(new ShootCommand(intakeSubsystem, armSubsystem));
-    driverController.leftBumper().whileTrue(new RunIntakeCommand(intakeSubsystem));
+    auxController.rightBumper().onTrue(new ShootCommand(intakeSubsystem, armSubsystem));
+    auxController.leftBumper().whileTrue(new RunIntakeCommand(intakeSubsystem));
   }
   
 
