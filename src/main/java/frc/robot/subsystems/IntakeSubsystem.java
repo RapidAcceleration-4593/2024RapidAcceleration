@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.ArmConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
     
@@ -15,7 +14,6 @@ public class IntakeSubsystem extends SubsystemBase {
     private final PWMSparkMax beakIntakeMotor = IntakeConstants.beakIntakeMotor;
 
     private final DigitalInput intakeLimitSwitch = IntakeConstants.intakeLimitSwitch;
-    private final DigitalInput bottomLimitSwitch = ArmConstants.bottomLimitSwitch;
 
     private void setShooterSpeed(double speed) {
         shooterTopMotor.set(speed);
@@ -28,7 +26,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
     
     public void intake() {
-        if (!bottomLimitSwitch.get() && !intakeLimitSwitch.get()) {
+        if (!intakeLimitSwitch.get()) {
             setIntakeSpeed(1);
         } else {
             stopIntake();
@@ -48,12 +46,12 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void runShooter() {
-        setShooterSpeed(.3);
+        setShooterSpeed(1.0);
     }
     
     public void stopShooter() {
-        shooterTopMotor.set(0.0);
-        shooterBottomMotor.set(0.0);
+        shooterTopMotor.stopMotor();
+        shooterBottomMotor.stopMotor();
     }
 
 }

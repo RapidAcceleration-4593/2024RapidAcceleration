@@ -28,29 +28,30 @@ public class ShootCommand extends Command {
 
     @Override
     public void initialize() {
+        intakeTimer.stop();
         intakeTimer.reset();
-        shooterTimer.restart();
+
+        shooterTimer.stop();
+        shooterTimer.reset();
+        shooterTimer.start();
     }
 
     @Override
     public void execute() {
-        System.out.println("Shooting");
         armSubsystem.maintainArmState();
         intakeSubsystem.runShooter();
 
-        if (shooterTimer.get() < 0.4) {
-            return;
-        }
-        
-        if (intakeTimer.get() == 0) {
-            intakeSubsystem.runArmIntake();
-            intakeTimer.start();
+        if (shooterTimer.hasElapsed(1.6)) {
+            if (intakeTimer.get() == 0) {
+                intakeSubsystem.runArmIntake();
+                intakeTimer.start();
+            }
         }
     }
     
     @Override
     public boolean isFinished() {
-        return intakeTimer.get() > 0.4F;
+        return intakeTimer.hasElapsed(1.2);
     }
 
     @Override
