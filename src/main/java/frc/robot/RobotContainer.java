@@ -33,7 +33,6 @@ public class RobotContainer {
 
   // Controller(s)
   private final CommandXboxController driverController = new CommandXboxController(0);
-  private final CommandXboxController auxController = new CommandXboxController(1);
 
   Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
         () -> MathUtil.applyDeadband(driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
@@ -48,22 +47,19 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // Driver Controller
     driverController.back().onTrue(Commands.runOnce(drivebase::zeroGyro));
 
-    auxController.povDown().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.INTAKE));
-    auxController.povLeft().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.SUBWOOFER));
-    auxController.povUp().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.AMP));
-    auxController.povRight().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.YEET));
+    driverController.povDown().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.INTAKE));
+    driverController.povLeft().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.SUBWOOFER));
+    driverController.povUp().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.AMP));
+    driverController.povRight().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.YEET));
 
-    auxController.rightBumper().onTrue(new ShootCommand(intakeSubsystem, armSubsystem));
-    auxController.leftBumper().whileTrue(new RunIntakeCommand(intakeSubsystem));
+    driverController.rightBumper().onTrue(new ShootCommand(intakeSubsystem, armSubsystem));
+    driverController.leftBumper().whileTrue(new RunIntakeCommand(intakeSubsystem));
   }
   
-
-  // Use this method to pass the autonomous command to the main class
   public Command getAutonomousCommand() {
-    return null;
+    return Commands.none();
   }
 
   public void setMotorBrake(boolean brake) {
