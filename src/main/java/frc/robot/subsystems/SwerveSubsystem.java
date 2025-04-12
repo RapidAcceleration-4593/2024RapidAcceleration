@@ -90,7 +90,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     /** Setup AutoBuilder for PathPlanner. */
-        public void setupPathPlanner() {
+    public void setupPathPlanner() {
         // Load the RobotConfig from the GUI settings. Store this in Constants file.
         RobotConfig config;
         try {
@@ -149,14 +149,14 @@ public class SwerveSubsystem extends SubsystemBase {
     public Command driveToPose(Pose2d pose) {
         // Create the constraints to use while pathfinding.
         PathConstraints constraints = new PathConstraints(
-        1.5, 1.5,
-        swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));
+            1.5, 1.5,
+            swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));
 
         // Since AutoBuilder is configured, we can use it to build pathfinding commands.
         return AutoBuilder.pathfindToPose(
-        pose,
-        constraints,
-        edu.wpi.first.units.Units.MetersPerSecond.of(0) // Goal end velocity in meters/sec.
+            pose,
+            constraints,
+            edu.wpi.first.units.Units.MetersPerSecond.of(0) // Goal end velocity in meters/sec.
         );
     }
 

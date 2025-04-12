@@ -7,51 +7,64 @@ import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
     
-    private final PWMSparkMax shooterTopMotor = IntakeConstants.shooterTopMotor;
-    private final PWMSparkMax shooterBottomMotor = IntakeConstants.shooterBottomMotor;
+    private final PWMSparkMax topShooterMotor = IntakeConstants.topShooterMotor;
+    private final PWMSparkMax bottomShooterMotor = IntakeConstants.bottomShooterMotor;
 
     private final PWMSparkMax bumperIntakeMotor = IntakeConstants.bumperIntakeMotor;
-    private final PWMSparkMax beakIntakeMotor = IntakeConstants.beakIntakeMotor;
+    private final PWMSparkMax armIntakeMotor = IntakeConstants.armIntakeMotor;
 
     private final DigitalInput intakeLimitSwitch = IntakeConstants.intakeLimitSwitch;
 
-    private void setShooterSpeed(double speed) {
-        shooterTopMotor.set(speed);
-        shooterBottomMotor.set(speed);
+    public IntakeSubsystem() {
+        // Constructor
     }
 
-    private void setIntakeSpeed(double speed) {
+    /**
+     * Sets the speed of the shooter motors.
+     * @param speed The speed to set the shooter motors to, between -1.0 and 1.0.
+     */
+    private void setShooterSpeed(double speed) {
+        topShooterMotor.set(speed);
+        bottomShooterMotor.set(speed);
+    }
+
+    /**
+     * Sets the speed of the intake motors.
+     * @param speed The speed to set the intake motors to, between -1.0 and 1.0.
+     */
+    private void setIntakeSpeeds(double speed) {
         bumperIntakeMotor.set(speed);
-        beakIntakeMotor.set(-speed);
+        armIntakeMotor.set(-speed);
     }
     
-    public void intake() {
+    /** Runs the intake motors if the limit switch is not pressed. */
+    public void runIntakes() {
         if (!intakeLimitSwitch.get()) {
-            setIntakeSpeed(1);
+            setIntakeSpeeds(1.0);
         } else {
-            stopIntake();
+            stopIntakes();
         }
     }
 
+    /** Runs the intake on the Arm. */
     public void runArmIntake() {
-        beakIntakeMotor.set(-1);
+        armIntakeMotor.set(-1.0);
     }
 
-    public void outtake() {
-        setIntakeSpeed(-1);
+    /** Stops the intake motors. */
+    public void stopIntakes() {
+        bumperIntakeMotor.stopMotor();
+        armIntakeMotor.stopMotor();
     }
 
-    public void stopIntake() {
-        setIntakeSpeed(0);
-    }
-
-    public void runShooter() {
+    /** Runs both shooters. */
+    public void runShooters() {
         setShooterSpeed(1.0);
     }
     
-    public void stopShooter() {
-        shooterTopMotor.stopMotor();
-        shooterBottomMotor.stopMotor();
+    /** Stops both shooters. */
+    public void stopShooters() {
+        topShooterMotor.stopMotor();
+        bottomShooterMotor.stopMotor();
     }
-
 }

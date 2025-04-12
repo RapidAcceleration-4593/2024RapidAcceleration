@@ -34,7 +34,6 @@ public final class Constants {
         // public static final Encoder secondaryNeckEncoder = new Encoder(6, 7);
         
         public static final PIDConstants ARM_PID = new PIDConstants(0.004, 0, 0.0014);
-        public static final double PID_THRESHOLD = 5;
 
         public enum ArmStates {
             INTAKE,
@@ -45,30 +44,19 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final PWMSparkMax shooterTopMotor = new PWMSparkMax(1);
-        public static final PWMSparkMax shooterBottomMotor = new PWMSparkMax(3);
+
+        public static final PWMSparkMax topShooterMotor = new PWMSparkMax(1);
+        public static final PWMSparkMax bottomShooterMotor = new PWMSparkMax(3);
 
         public static final PWMSparkMax bumperIntakeMotor = new PWMSparkMax(4);
-        public static final PWMSparkMax beakIntakeMotor = new PWMSparkMax(0);
+        public static final PWMSparkMax armIntakeMotor = new PWMSparkMax(0);
         
         public static final DigitalInput intakeLimitSwitch = new DigitalInput(0);
-    }
-
-    public static final class WristConstants {
-        public static final SparkMax leftWristMotor = new SparkMax(0, MotorType.kBrushless);
-        public static final SparkMax rightWristMotor = new SparkMax(0, MotorType.kBrushless);
-
-        public static final Encoder wristEncoder = new Encoder(0, 0);
-    
-        public static final double swivelSpeed = 0.25;
-        public static final double rotateSpeed = 0.3;
     }
 
     public static final class AutonConstants {
         public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
         public static final PIDConstants ANGLE_PID   = new PIDConstants(0.4, 0.0, 0.01);
-
-        public static final boolean DRIVE_WITH_VISION = true;
     }
 
     public static final class DrivebaseConstants {
@@ -78,7 +66,6 @@ public final class Constants {
 
     public static class OperatorConstants {
         public static final int DRIVER_CONTROLLER_PORT = 0;
-        public static final int AUXILIARY_CONTROLLER_PORT = 1;
 
         public static final double DEADBAND = 0.1;
         public static final double TURN_CONSTANT = 6;

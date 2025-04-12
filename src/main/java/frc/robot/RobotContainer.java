@@ -11,8 +11,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ArmConstants.ArmStates;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.arm.MaintainArmState;
-import frc.robot.commands.arm.SetArmSetpoint;
-import frc.robot.commands.intake.RunIntakeCommand;
+import frc.robot.commands.arm.SetArmState;
+import frc.robot.commands.intake.ContinuousShootCommand;
+import frc.robot.commands.intake.IntakeCommand;
 import frc.robot.commands.intake.ShootCommand;
 import frc.robot.subsystems.*;
 import swervelib.SwerveInputStream;
@@ -58,17 +59,17 @@ public class RobotContainer {
     private void configureBindings() {
         driverController.back().onTrue(Commands.runOnce(drivebase::zeroGyro));
 
-        driverController.povDown().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.INTAKE));
-        driverController.povLeft().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.SUBWOOFER));
-        driverController.povUp().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.AMP));
-        driverController.povRight().onTrue(new SetArmSetpoint(armSubsystem, ArmStates.YEET));
+        driverController.povDown().onTrue(new SetArmState(armSubsystem, ArmStates.INTAKE));
+        driverController.povLeft().onTrue(new SetArmState(armSubsystem, ArmStates.SUBWOOFER));
+        driverController.povRight().onTrue(new SetArmState(armSubsystem, ArmStates.YEET));
+        driverController.povUp().onTrue(new SetArmState(armSubsystem, ArmStates.AMP));
 
-        driverController.rightBumper().onTrue(new ShootCommand(intakeSubsystem, armSubsystem));
-        driverController.leftBumper().whileTrue(new RunIntakeCommand(intakeSubsystem));
+        driverController.leftBumper().whileTrue(new IntakeCommand(intakeSubsystem));
+        driverController.rightBumper().onTrue(new ShootCommand(intakeSubsystem));
+
+        driverController.x().whileTrue(new ContinuousShootCommand(intakeSubsystem));
     }
     
-
-    // Use this method to pass the autonomous command to the main class
     public Command getAutonomousCommand() {
         return Commands.none();
     }
