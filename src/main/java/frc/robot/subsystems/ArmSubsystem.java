@@ -1,21 +1,23 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ArmConstants.ArmStates;
 
 public class ArmSubsystem extends SubsystemBase {
     
-    private final CANSparkMax leftGearbox1 = ArmConstants.leftGearbox1;
-    private final CANSparkMax leftGearbox2 = ArmConstants.leftGearbox2;
-    private final CANSparkMax rightGearbox1 = ArmConstants.rightGearbox1;
-    private final CANSparkMax rightGearbox2 = ArmConstants.rightGearbox2;
+    private final SparkMax leftGearbox1 = ArmConstants.leftGearbox1;
+    private final SparkMax leftGearbox2 = ArmConstants.leftGearbox2;
+    private final SparkMax rightGearbox1 = ArmConstants.rightGearbox1;
+    private final SparkMax rightGearbox2 = ArmConstants.rightGearbox2;
 
     private final DigitalInput topLimitSwitch = ArmConstants.topLimitSwitch;
     private final DigitalInput bottomLimitSwitch = ArmConstants.bottomLimitSwitch;
@@ -26,12 +28,16 @@ public class ArmSubsystem extends SubsystemBase {
 
     private final double[] setpoints = {0, 40, 100, 250};
 
+    private final SparkMaxConfig leftConfig = new SparkMaxConfig();
+    private final SparkMaxConfig rightConfig = new SparkMaxConfig();
+
     public ArmSubsystem() {
-        
-        // leftGearbox1.setIdleMode(IdleMode.kBrake);
-        // leftGearbox2.setIdleMode(IdleMode.kBrake);
-        // rightGearbox1.setIdleMode(IdleMode.kBrake);
-        // rightGearbox2.setIdleMode(IdleMode.kBrake);
+        leftConfig.follow(leftGearbox1, false);
+        rightConfig.follow(leftGearbox1, true);
+
+        leftGearbox2.configure(leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        rightGearbox1.configure(rightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        rightGearbox2.configure(rightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     private double getArmStates(ArmStates state) {
@@ -47,6 +53,7 @@ public class ArmSubsystem extends SubsystemBase {
         armPIDController.setSetpoint(getArmStates(state));
     }
 
+
     /** ----- Arm State System ----- */
 
     // Default Command
@@ -57,20 +64,14 @@ public class ArmSubsystem extends SubsystemBase {
                             "\nPID Output: " + armPIDController.calculate(getEncoderValue())
                             );
         if (isTopLimitSwitchPressed() && isBottomLimitSwitchPressed()) {
-            // System Malfunction.
             stopArmMotors();
         } else if (isTopLimitSwitchPressed()) {
-            // Top Limit Switch.
             handleTopLimitSwitchPressed();
         } else if (isBottomLimitSwitchPressed()) {
-            // Bottom Limit Switch.
             handleBottomLimitSwitchPressed();
         } else {
-            // Regular Control.
             updatePIDConstants(getEncoderValue(), getArmSetpoint(), ArmConstants.PID_THRESHOLD);
         }
-        SmartDashboard.putNumber("ArmEncoder", getEncoderValue());
-        SmartDashboard.putNumber("Setpoint", getArmSetpoint());
     }
 
     private void updatePIDConstants(double encoder, double setpoint, double threshold) {
@@ -113,9 +114,6 @@ public class ArmSubsystem extends SubsystemBase {
 
     private void setArmSpeed(double speed) {
         leftGearbox1.set(speed);
-        leftGearbox2.follow(leftGearbox1, false);
-        rightGearbox1.follow(leftGearbox1, true);
-        rightGearbox2.follow(leftGearbox1, true);
     }
 
     private void stopArmMotors() {
