@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -54,6 +55,8 @@ public class RobotContainer {
 
         drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
         armSubsystem.setDefaultCommand(new MaintainArmState(armSubsystem));
+
+        DriverStation.silenceJoystickConnectionWarning(true);
     }
 
     private void configureBindings() {

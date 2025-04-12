@@ -33,7 +33,7 @@ public final class Constants {
         public static final Encoder primaryNeckEncoder = new Encoder(8, 9);
         // public static final Encoder secondaryNeckEncoder = new Encoder(6, 7);
         
-        public static final PIDConstants ARM_PID = new PIDConstants(0.004, 0, 0.0014);
+        public static final PIDConstants ARM_PID = new PIDConstants(0.004, 0.0, 0.0); // 0.004, 0, 0.0014
 
         public enum ArmStates {
             INTAKE,
@@ -44,7 +44,6 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-
         public static final PWMSparkMax topShooterMotor = new PWMSparkMax(1);
         public static final PWMSparkMax bottomShooterMotor = new PWMSparkMax(3);
 
