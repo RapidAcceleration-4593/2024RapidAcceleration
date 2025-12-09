@@ -11,9 +11,9 @@ public class IntakeCommand extends Command {
         this.intakeSubsystem = subsystem;
         addRequirements(subsystem);
     }
-
+    
     @Override
-    public void execute() {
+    public void initialize() {
         intakeSubsystem.runIntakes();
     }
 
