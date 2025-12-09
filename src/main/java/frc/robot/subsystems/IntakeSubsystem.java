@@ -7,11 +7,10 @@ import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
     
-    private final PWMSparkMax topShooterMotor = IntakeConstants.topShooterMotor;
-    private final PWMSparkMax bottomShooterMotor = IntakeConstants.bottomShooterMotor;
-
     private final PWMSparkMax bumperIntakeMotor = IntakeConstants.bumperIntakeMotor;
     private final PWMSparkMax armIntakeMotor = IntakeConstants.armIntakeMotor;
+    private final PWMSparkMax topShooterMoter = IntakeConstants.topShooterMotor;
+    private final PWMSparkMax bottomShooterMoter = IntakeConstants.bottomShooterMotor;
 
     private final DigitalInput intakeLimitSwitch = IntakeConstants.intakeLimitSwitch;
 
@@ -19,52 +18,27 @@ public class IntakeSubsystem extends SubsystemBase {
         // Constructor
     }
 
-    /**
-     * Sets the speed of the shooter motors.
-     * @param speed The speed to set the shooter motors to, between -1.0 and 1.0.
-     */
-    private void setShooterSpeed(double speed) {
-        topShooterMotor.set(speed);
-        bottomShooterMotor.set(speed);
-    }
-
-    /**
-     * Sets the speed of the intake motors.
-     * @param speed The speed to set the intake motors to, between -1.0 and 1.0.
-     */
-    private void setIntakeSpeeds(double speed) {
-        bumperIntakeMotor.set(speed);
-        armIntakeMotor.set(-speed);
-    }
-    
-    /** Runs the intake motors if the limit switch is not pressed. */
     public void runIntakes() {
         if (!intakeLimitSwitch.get()) {
-            setIntakeSpeeds(1.0);
+            bumperIntakeMotor.set(1.0);
+            armIntakeMotor.set(-1.0);
         } else {
             stopIntakes();
         }
     }
 
-    /** Runs the intake on the Arm. */
-    public void runArmIntake() {
-        armIntakeMotor.set(-1.0);
-    }
-
-    /** Stops the intake motors. */
     public void stopIntakes() {
-        bumperIntakeMotor.stopMotor();
         armIntakeMotor.stopMotor();
+        bumperIntakeMotor.stopMotor();
     }
 
-    /** Runs both shooters. */
-    public void runShooters() {
-        setShooterSpeed(1.0);
+    public void runShooter() {
+        topShooterMoter.set(1.0);
+        bottomShooterMoter.set(1.0);
     }
-    
-    /** Stops both shooters. */
-    public void stopShooters() {
-        topShooterMotor.stopMotor();
-        bottomShooterMotor.stopMotor();
+
+    public void stopShooter() {
+        topShooterMoter.stopMotor();
+        bottomShooterMoter.stopMotor();
     }
 }

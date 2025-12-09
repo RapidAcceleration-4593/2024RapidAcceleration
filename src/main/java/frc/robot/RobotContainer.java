@@ -14,6 +14,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.arm.MaintainArmState;
 import frc.robot.commands.arm.SetArmState;
 import frc.robot.commands.intake.IntakeCommand;
+import frc.robot.commands.intake.ShooterCommand;
 import frc.robot.subsystems.*;
 import swervelib.SwerveInputStream;
 
@@ -64,8 +65,9 @@ public class RobotContainer {
         driverController.povLeft().onTrue(new SetArmState(armSubsystem, ArmStates.SUBWOOFER));
         driverController.povRight().onTrue(new SetArmState(armSubsystem, ArmStates.YEET));
         driverController.povUp().onTrue(new SetArmState(armSubsystem, ArmStates.AMP));
-        
+
         driverController.a().whileTrue(new IntakeCommand(intakeSubsystem));
+        driverController.b().whileTrue(new ShooterCommand(intakeSubsystem));
     }
     
     public Command getAutonomousCommand() {
