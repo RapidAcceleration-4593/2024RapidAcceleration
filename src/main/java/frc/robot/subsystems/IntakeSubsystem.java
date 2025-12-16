@@ -20,11 +20,15 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void runIntakes() {
         if (!intakeLimitSwitch.get()) {
-            bumperIntakeMotor.set(1.0);
-            armIntakeMotor.set(-1.0);
+            setIntakes(1.0);
         } else {
             stopIntakes();
         }
+    }
+
+    public void setIntakes(Double speed) {
+        bumperIntakeMotor.set(speed);
+        armIntakeMotor.set(-speed);
     }
 
     public void stopIntakes() {
@@ -35,10 +39,12 @@ public class IntakeSubsystem extends SubsystemBase {
     public void runShooter() {
         topShooterMoter.set(1.0);
         bottomShooterMoter.set(1.0);
+        setIntakes(1.0);
     }
 
     public void stopShooter() {
         topShooterMoter.stopMotor();
         bottomShooterMoter.stopMotor();
+        stopIntakes();
     }
 }
