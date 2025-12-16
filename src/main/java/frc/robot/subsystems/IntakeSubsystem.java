@@ -18,6 +18,7 @@ public class IntakeSubsystem extends SubsystemBase {
         // Constructor
     }
 
+    /** Runs intake motors if limit switch isn't pressed. */
     public void runIntakes() {
         if (!intakeLimitSwitch.get()) {
             setIntakes(1.0);
@@ -26,22 +27,29 @@ public class IntakeSubsystem extends SubsystemBase {
         }
     }
 
+    /**
+     * Sets speed of intake motors.
+     * @param speed speed of intake motors.
+     */
     public void setIntakes(Double speed) {
         bumperIntakeMotor.set(speed);
         armIntakeMotor.set(-speed);
     }
 
+    /** Stops intake motors. */
     public void stopIntakes() {
         armIntakeMotor.stopMotor();
         bumperIntakeMotor.stopMotor();
     }
 
+    /** Runs shooter motors and spins intakes to push nodes into shooter. */
     public void runShooter() {
         topShooterMoter.set(1.0);
         bottomShooterMoter.set(1.0);
         setIntakes(1.0);
     }
 
+    /** Stops shooter motors. */
     public void stopShooter() {
         topShooterMoter.stopMotor();
         bottomShooterMoter.stopMotor();
