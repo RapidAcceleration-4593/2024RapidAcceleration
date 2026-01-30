@@ -1,22 +1,29 @@
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.IntakeConstants.*;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
     
-    private final PWMSparkMax topShooterMotor = IntakeConstants.topShooterMotor;
-    private final PWMSparkMax bottomShooterMotor = IntakeConstants.bottomShooterMotor;
+    private final PWMSparkMax topShooterMotor;
+    private final PWMSparkMax bottomShooterMotor;
 
-    private final PWMSparkMax bumperIntakeMotor = IntakeConstants.bumperIntakeMotor;
-    private final PWMSparkMax armIntakeMotor = IntakeConstants.armIntakeMotor;
+    private final PWMSparkMax bumperIntakeMotor;
+    private final PWMSparkMax armIntakeMotor;
 
-    private final DigitalInput intakeLimitSwitch = IntakeConstants.intakeLimitSwitch;
+    private final DigitalInput intakeLimitSwitch;
 
     public IntakeSubsystem() {
-        // Constructor
+        topShooterMotor = new PWMSparkMax(kTopShooterMotorID);
+        bottomShooterMotor = new PWMSparkMax(kBottomShooterMotorID);
+
+        bumperIntakeMotor = new PWMSparkMax(kBumperIntakeMotorID);
+        armIntakeMotor = new PWMSparkMax(kArmIntakeMotorID);
+
+        intakeLimitSwitch = new DigitalInput(kIntakeLimitSwitchChannel);
     }
 
     /**

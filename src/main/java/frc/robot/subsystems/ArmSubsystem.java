@@ -1,8 +1,12 @@
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.ArmConstants.*;
+
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
@@ -11,40 +15,47 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ArmConstants.ArmStates;
 
 public class ArmSubsystem extends SubsystemBase {
     
-    private final SparkMax leftGearbox1 = ArmConstants.leftGearbox1;
-    private final SparkMax leftGearbox2 = ArmConstants.leftGearbox2;
-    private final SparkMax rightGearbox1 = ArmConstants.rightGearbox1;
-    private final SparkMax rightGearbox2 = ArmConstants.rightGearbox2;
+    private final SparkMax leftGearbox1;
+    private final SparkMax leftGearbox2;
+    private final SparkMax rightGearbox1;
+    private final SparkMax rightGearbox2;
 
-    private final DigitalInput topLimitSwitch = ArmConstants.topLimitSwitch;
-    private final DigitalInput bottomLimitSwitch = ArmConstants.bottomLimitSwitch;
+    private final DigitalInput topLimitSwitch;
+    private final DigitalInput bottomLimitSwitch;
 
-    private final Encoder armEncoder = ArmConstants.primaryNeckEncoder;
-
-    private final PIDController armPIDController = new PIDController(ArmConstants.ARM_PID.kP, ArmConstants.ARM_PID.kI, ArmConstants.ARM_PID.kD);
+    private final Encoder encoder;
+    private final PIDController controller;
 
     private static final double[] SETPOINTS = {0, 40, 100, 250};
 
-    private final SparkMaxConfig leaderConfig = new SparkMaxConfig();
-    private final SparkMaxConfig leftConfig = new SparkMaxConfig();
-    private final SparkMaxConfig rightConfig = new SparkMaxConfig();
-
     public ArmSubsystem() {
-        leaderConfig.idleMode(IdleMode.kBrake);
-        leftConfig.idleMode(IdleMode.kBrake).follow(leftGearbox1, false);
-        rightConfig.idleMode(IdleMode.kBrake).follow(leftGearbox1, true);
+        leftGearbox1 = new SparkMax(kLeftGearbox1, MotorType.kBrushless);
+        leftGearbox2 = new SparkMax(kLeftGearbox2, MotorType.kBrushless);
+        rightGearbox1 = new SparkMax(kRightGearbox1, MotorType.kBrushless);
+        rightGearbox2 = new SparkMax(kRightGearbox2, MotorType.kBrushless);
+
+        topLimitSwitch = new DigitalInput(kTopLimitSwitchChannel);
+        bottomLimitSwitch = new DigitalInput(kBottomLimitSwitchChannel);
+
+        encoder = new Encoder(kEncoderChannelA, kEncoderChannelB);
+        controller = new PIDController(kP, kI, kD);
+        controller.setTolerance(5);
+
+        SparkBaseConfig leaderConfig = new SparkMaxConfig()
+                .idleMode(IdleMode.kBrake);
+        SparkBaseConfig leftConfig = new SparkMaxConfig()
+                .idleMode(IdleMode.kBrake).follow(leftGearbox1, false);
+        SparkBaseConfig rightConfig = new SparkMaxConfig()
+                .idleMode(IdleMode.kBrake).follow(leftGearbox1, true);
 
         leftGearbox1.configure(leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         leftGearbox2.configure(leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         rightGearbox1.configure(rightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         rightGearbox2.configure(rightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-        armPIDController.setTolerance(5);
     }
 
 
@@ -100,7 +111,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     /** Controls the Arm System using a PID Controller. */
     private void controlArm() {
-        double output = armPIDController.calculate(getEncoderValue(), getSetpoint());
+        double output = controller.calculate(getEncoderValue(), getSetpoint());
 
         if (atSetpoint()) {
             stopMotors();
@@ -183,12 +194,12 @@ public class ArmSubsystem extends SubsystemBase {
      * @return The current encoder value of the arm.
      */
     private double getEncoderValue() {
-        return Math.abs(armEncoder.get() / 2); // TODO: Adjust for higher resolution and negative numbers.
+        return Math.abs(encoder.get() / 2); // TODO: Adjust for higher resolution and negative numbers.
     }
 
     /** Resets the arm encoder. */
     private void resetEncoder() {
-        armEncoder.reset();
+        encoder.reset();
     }
 
     /**
@@ -196,7 +207,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @return The current numerical setpoint value.
      */
     private double getSetpoint() {
-        return armPIDController.getSetpoint();
+        return controller.getSetpoint();
     }
 
     /**
@@ -204,7 +215,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @return If the arm is at the setpoint, accounting for tolerance.
      */
     private boolean atSetpoint() {
-        return armPIDController.atSetpoint();
+        return controller.atSetpoint();
     }
 
     /**
@@ -212,7 +223,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @param setpoint New setpoint value.
      */
     public void setSetpoint(double setpoint) {
-        armPIDController.setSetpoint(setpoint);
+        controller.setSetpoint(setpoint);
     }
 
     /** Updates values to SmartDashboard/ShuffleBoard. */

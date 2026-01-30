@@ -4,36 +4,31 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.config.PIDConstants;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import swervelib.math.Matter;
 
 public final class Constants {
-    public static final double ROBOT_MASS = Units.lbsToKilograms(130);
-    public static final Matter CHASSIS = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
-    public static final double LOOP_TIME = 0.13; // Seconds, 20ms + 110ms Spark Max Velocity Lag.
-    public static final double MAX_SPEED = Units.feetToMeters(10.0); // Maximum speed of robot in meters per second, used to limit acceleration.
+    public static final double kRobotMass = Units.lbsToKilograms(130);
+    public static final Matter kRobotChassis = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), kRobotMass);
+    public static final double kLoopTime = 0.13; // Seconds, 20ms + 110ms Spark Max Velocity Lag.
+    public static final double kMaxVelocity = 4.0; // Maximum speed of robot in meters per second, used to limit acceleration.
 
     public static final class ArmConstants {
-        public static final SparkMax leftGearbox1 = new SparkMax(19, MotorType.kBrushless);
-        public static final SparkMax leftGearbox2 = new SparkMax(20, MotorType.kBrushless);
-        public static final SparkMax rightGearbox1 = new SparkMax(8, MotorType.kBrushless);
-        public static final SparkMax rightGearbox2 = new SparkMax(9, MotorType.kBrushless);
+        public static final int kLeftGearbox1 = 19;
+        public static final int kLeftGearbox2 = 20;
+        public static final int kRightGearbox1 = 8;
+        public static final int kRightGearbox2 = 9;
 
-        public static final DigitalInput topLimitSwitch = new DigitalInput(4);
-        public static final DigitalInput bottomLimitSwitch = new DigitalInput(1);
+        public static final int kTopLimitSwitchChannel = 4;
+        public static final int kBottomLimitSwitchChannel = 1;
 
-        public static final Encoder primaryNeckEncoder = new Encoder(8, 9);
-        // public static final Encoder secondaryNeckEncoder = new Encoder(6, 7);
-        
-        public static final PIDConstants ARM_PID = new PIDConstants(0.004, 0.0, 0.0); // 0.004, 0, 0.0014
+        public static final int kEncoderChannelA = 8;
+        public static final int kEncoderChannelB = 9;
+
+        public static final double kP = 0.004;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0; // 0.0014
 
         public enum ArmStates {
             INTAKE,
@@ -44,18 +39,13 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final PWMSparkMax topShooterMotor = new PWMSparkMax(1);
-        public static final PWMSparkMax bottomShooterMotor = new PWMSparkMax(3);
+        public static final int kTopShooterMotorID = 1;
+        public static final int kBottomShooterMotorID = 3;
 
-        public static final PWMSparkMax bumperIntakeMotor = new PWMSparkMax(4);
-        public static final PWMSparkMax armIntakeMotor = new PWMSparkMax(0);
-        
-        public static final DigitalInput intakeLimitSwitch = new DigitalInput(0);
-    }
+        public static final int kBumperIntakeMotorID = 4;
+        public static final int kArmIntakeMotorID = 0;
 
-    public static final class AutonConstants {
-        public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
-        public static final PIDConstants ANGLE_PID   = new PIDConstants(0.4, 0.0, 0.01);
+        public static final int kIntakeLimitSwitchChannel = 0;
     }
 
     public static final class DrivebaseConstants {
@@ -65,7 +55,6 @@ public final class Constants {
 
     public static class OperatorConstants {
         public static final int DRIVER_CONTROLLER_PORT = 0;
-
         public static final double DEADBAND = 0.1;
         public static final double TURN_CONSTANT = 6;
         public static final double SCALE_TRANSLATION = 1.0;

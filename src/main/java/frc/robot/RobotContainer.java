@@ -18,7 +18,6 @@ import frc.robot.commands.intake.IntakeCommand;
 import frc.robot.commands.intake.ShootCommand;
 import frc.robot.subsystems.*;
 import swervelib.SwerveInputStream;
-
 import java.io.File;
 
 /**
@@ -26,58 +25,50 @@ import java.io.File;
  * Most robot logic is managed here, not in the {@link Robot} periodic methods.
  */
 public class RobotContainer {
+
     // Subsystem(s)
-    public final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
-    public final ArmSubsystem armSubsystem = new ArmSubsystem();
-    public final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+    public final SwerveSubsystem swerve = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
+    public final ArmSubsystem arm = new ArmSubsystem();
+    public final IntakeSubsystem intake = new IntakeSubsystem();
 
     // Controller(s)
-    private final CommandXboxController driverController = new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
+    private final CommandXboxController controller = new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
 
     /** Converts driver input into a field-relative ChassisSpeeds that is controller by angular velocity. */
-    SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> -driverController.getLeftY(),
-                                                                () -> -driverController.getLeftX())
-                                                                .withControllerRotationAxis(() -> -driverController.getRightX())
+    SwerveInputStream driveAngularVelocity = SwerveInputStream.of(swerve.getSwerveDrive(),
+                                                                () -> -controller.getLeftY(),
+                                                                () -> -controller.getLeftX())
+                                                                .withControllerRotationAxis(() -> -controller.getRightX())
                                                                 .deadband(OperatorConstants.DEADBAND)
                                                                 .scaleTranslation(OperatorConstants.SCALE_TRANSLATION)
                                                                 .allianceRelativeControl(true);
 
-    /** Clones the angular velocity input stream and converts it to a robotRelative input stream. */
-    SwerveInputStream driveRobotOriented = driveAngularVelocity.copy().robotRelative(true)
-                                                                    .allianceRelativeControl(false);
-
-    Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
-    Command driveRobotOrientedAngularVelocity = drivebase.driveFieldOriented(driveRobotOriented);
+    Command driveFieldOrientedAngularVelocity = swerve.driveFieldOriented(driveAngularVelocity);
 
     public RobotContainer() {
         configureBindings();
 
-        drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
-        armSubsystem.setDefaultCommand(new MaintainArmState(armSubsystem));
+        swerve.setDefaultCommand(driveFieldOrientedAngularVelocity);
+        arm.setDefaultCommand(new MaintainArmState(arm));
 
         DriverStation.silenceJoystickConnectionWarning(true);
     }
 
     private void configureBindings() {
-        driverController.back().onTrue(Commands.runOnce(drivebase::zeroGyro));
+        controller.back().onTrue(Commands.runOnce(swerve::zeroGyro));
 
-        driverController.povDown().onTrue(new SetArmState(armSubsystem, ArmStates.INTAKE));
-        driverController.povLeft().onTrue(new SetArmState(armSubsystem, ArmStates.SUBWOOFER));
-        driverController.povRight().onTrue(new SetArmState(armSubsystem, ArmStates.YEET));
-        driverController.povUp().onTrue(new SetArmState(armSubsystem, ArmStates.AMP));
+        controller.povDown().onTrue(new SetArmState(arm, ArmStates.INTAKE));
+        controller.povLeft().onTrue(new SetArmState(arm, ArmStates.SUBWOOFER));
+        controller.povRight().onTrue(new SetArmState(arm, ArmStates.YEET));
+        controller.povUp().onTrue(new SetArmState(arm, ArmStates.AMP));
 
-        driverController.leftBumper().whileTrue(new IntakeCommand(intakeSubsystem));
-        driverController.rightBumper().onTrue(new ShootCommand(intakeSubsystem));
+        controller.leftBumper().whileTrue(new IntakeCommand(intake));
+        controller.rightBumper().onTrue(new ShootCommand(intake));
 
-        driverController.x().whileTrue(new ContinuousShootCommand(intakeSubsystem));
-    }
-    
-    public Command getAutonomousCommand() {
-        return Commands.none();
+        controller.x().whileTrue(new ContinuousShootCommand(intake));
     }
 
     public void setMotorBrake(boolean brake) {
-        drivebase.setMotorBrake(brake);
+        swerve.setMotorBrake(brake);
     }
 }
