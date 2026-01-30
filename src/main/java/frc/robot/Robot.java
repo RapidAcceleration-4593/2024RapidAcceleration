@@ -4,43 +4,29 @@
 
 package frc.robot;
 
+import static frc.robot.Constants.kWheelLockTime;
+
+import java.io.File;
+import java.io.IOException;
+import swervelib.parser.SwerveParser;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-import java.io.File;
-import java.io.IOException;
-
-import swervelib.parser.SwerveParser;
-
-/**
- * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
- * described in the TimedRobot documentation. If you change the name of this class or the package after creating this
- * project, you must also update the build.gradle file in the project.
- */
 public class Robot extends TimedRobot {
 
-  private static Robot instance;
-  private RobotContainer m_robotContainer;
+  private RobotContainer robotContainer;
 
   private Timer disabledTimer;
-
-  public Robot() {
-    instance = this;
-  }
-
-  public static Robot getInstance() {
-    return instance;
-  }
 
   // This function is run when the robot is first started up and should be used for any initialization code.
   @Override
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+    robotContainer = new RobotContainer();
 
     // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
     // immediately when disabled, but then also let it be pushed more 
@@ -62,22 +48,22 @@ public class Robot extends TimedRobot {
   // This function is called once each time the robot enters Disabled mode.
   @Override
   public void disabledInit() {
-    m_robotContainer.setMotorBrake(true);
+    robotContainer.setMotorBrake(true);
     disabledTimer.reset();
     disabledTimer.start();
   }
 
   @Override
   public void disabledPeriodic() {
-    if (disabledTimer.hasElapsed(Constants.DrivebaseConstants.WHEEL_LOCK_TIME)) {
-      m_robotContainer.setMotorBrake(false);
+    if (disabledTimer.hasElapsed(kWheelLockTime)) {
+      robotContainer.setMotorBrake(false);
       disabledTimer.stop();
     }
   }
 
   // This autonomous runs the autonomous command selected by your RobotContainer class.
   public void autonomousInit() {
-    m_robotContainer.setMotorBrake(true);
+    robotContainer.setMotorBrake(true);
   }
 
   @Override
@@ -86,7 +72,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    m_robotContainer.setMotorBrake(true);
+    robotContainer.setMotorBrake(true);
   }
 
   @Override

@@ -5,7 +5,7 @@
 package frc.robot.subsystems;
 
 import static frc.robot.Constants.*;
-import static edu.wpi.first.units.Units.Meter;
+import static edu.wpi.first.units.Units.*;
 
 import java.io.File;
 import java.util.function.Supplier;
@@ -42,7 +42,7 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
         try {
-            swerveDrive = new SwerveParser(directory).createSwerveDrive(kMaxVelocity, startingPose);
+            swerveDrive = new SwerveParser(directory).createSwerveDrive(kMaxVelocity.in(MetersPerSecond), startingPose);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
