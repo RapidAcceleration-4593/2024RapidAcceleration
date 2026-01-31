@@ -1,5 +1,6 @@
 package frc.robot.subsystems.arm;
 
+import edu.wpi.first.units.measure.Voltage;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ArmIO {
@@ -14,8 +15,8 @@ public interface ArmIO {
     /** Fetches updates from sensors through the IO interface. */
     public default void updateInputs(ArmInputs inputs) {}
 
-    /** Sets the speed of the arm motors. */
-    public default void setSpeed(double speed) {}
+    /** Sets the voltage of the arm motors. */
+    public default void setVoltage(Voltage volts) {}
 
     /** Stops the arm motors immediately. */
     public default void stop() {}

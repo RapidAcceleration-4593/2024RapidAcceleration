@@ -40,10 +40,10 @@ public class RobotContainer {
 
         controller.back().onTrue(Commands.runOnce(swerve::zeroGyro));
 
-        // controller.povDown().onTrue(new SetArmState(arm, ArmStates.INTAKE));
-        // controller.povLeft().onTrue(new SetArmState(arm, ArmStates.SUBWOOFER));
-        // controller.povRight().onTrue(new SetArmState(arm, ArmStates.YEET));
-        // controller.povUp().onTrue(new SetArmState(arm, ArmStates.AMP));
+        controller.povDown().onTrue(arm.goToSetpointCommand(0));
+        controller.povLeft().onTrue(arm.goToSetpointCommand(40));
+        controller.povRight().onTrue(arm.goToSetpointCommand(100));
+        controller.povUp().onTrue(arm.goToSetpointCommand(250));
 
         controller.leftBumper().whileTrue(new IntakeCommand(intake));
         controller.rightBumper().onTrue(new ShootCommand(intake));

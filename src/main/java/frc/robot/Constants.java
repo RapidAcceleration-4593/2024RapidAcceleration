@@ -29,16 +29,9 @@ public final class Constants {
         public static final int kEncoderChannelA = 8;
         public static final int kEncoderChannelB = 9;
 
-        public static final double kP = 0.004;
-        public static final double kI = 0.0;
-        public static final double kD = 0.0; // 0.0014
-
-        public enum ArmStates {
-            INTAKE,
-            SUBWOOFER,
-            YEET,
-            AMP
-        }
+        public static final double kP = 0.04;
+        public static final double kI = 0.04;
+        public static final double kD = 0.0;
     }
 
     public static final class IntakeConstants {
@@ -55,6 +48,6 @@ public final class Constants {
         public static final int kControllerPort = 0;
         public static final double kDeadband = 0.1;
         public static final double kTurnConstant = 6.0;
-        public static final double kTranslationScale = 1.0;
+        public static final double kTranslationScale = 0.4593;
     }
 }

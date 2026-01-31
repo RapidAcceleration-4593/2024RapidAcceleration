@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 
@@ -25,10 +26,10 @@ public class ArmIOReal implements ArmIO {
     protected final Encoder encoder;
 
     public ArmIOReal() {
-        leftGearbox1 = new SparkMax(kLeftGearbox1, MotorType.kBrushed);
-        leftGearbox2 = new SparkMax(kLeftGearbox2, MotorType.kBrushed);
-        rightGearbox1 = new SparkMax(kRightGearbox1, MotorType.kBrushed);
-        rightGearbox2 = new SparkMax(kRightGearbox2, MotorType.kBrushed);
+        leftGearbox1 = new SparkMax(kLeftGearbox1, MotorType.kBrushless);
+        leftGearbox2 = new SparkMax(kLeftGearbox2, MotorType.kBrushless);
+        rightGearbox1 = new SparkMax(kRightGearbox1, MotorType.kBrushless);
+        rightGearbox2 = new SparkMax(kRightGearbox2, MotorType.kBrushless);
 
         SparkBaseConfig leaderConfig = new SparkMaxConfig().idleMode(IdleMode.kBrake);
         SparkBaseConfig leftConfig =
@@ -49,14 +50,14 @@ public class ArmIOReal implements ArmIO {
 
     @Override
     public void updateInputs(ArmInputs inputs) {
-        inputs.angle = Math.abs(encoder.get() / 2);
+        inputs.angle = -encoder.get() < 0 ? 0 : -encoder.get() / 2;
         inputs.topLimitSwitch = !topLimitSwitch.get();
         inputs.bottomLimitSwitch = !bottomLimitSwitch.get();
     }
 
     @Override
-    public void setSpeed(double speed) {
-        leftGearbox1.set(speed);
+    public void setVoltage(Voltage volts) {
+        leftGearbox1.setVoltage(volts);
     }
 
     @Override
