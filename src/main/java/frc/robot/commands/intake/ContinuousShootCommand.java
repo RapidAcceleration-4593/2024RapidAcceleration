@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class ContinuousShootCommand extends Command {
-    
+
     private final IntakeSubsystem intakeSubsystem;
 
     public ContinuousShootCommand(IntakeSubsystem subsystem) {

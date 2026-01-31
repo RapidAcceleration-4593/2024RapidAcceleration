@@ -12,8 +12,8 @@ import frc.robot.commands.intake.ShootCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.arm.ArmIOReal;
 import frc.robot.subsystems.arm.ArmSubsystem;
-import swervelib.SwerveInputStream;
 import java.io.File;
+import swervelib.SwerveInputStream;
 
 public class RobotContainer {
 
@@ -56,13 +56,12 @@ public class RobotContainer {
     }
 
     private Command driveCommand() {
-        SwerveInputStream driveAngularVelocity = SwerveInputStream.of(swerve.getSwerveDrive(),
-                                                                    () -> -controller.getLeftY(),
-                                                                    () -> -controller.getLeftX())
-                                                                    .withControllerRotationAxis(() -> -controller.getRightX())
-                                                                    .deadband(kDeadband)
-                                                                    .scaleTranslation(kTranslationScale)
-                                                                    .allianceRelativeControl(true);
+        SwerveInputStream driveAngularVelocity = SwerveInputStream.of(
+                        swerve.getSwerveDrive(), () -> -controller.getLeftY(), () -> -controller.getLeftX())
+                .withControllerRotationAxis(() -> -controller.getRightX())
+                .deadband(kDeadband)
+                .scaleTranslation(kTranslationScale)
+                .allianceRelativeControl(true);
 
         return swerve.driveFieldOriented(driveAngularVelocity);
     }

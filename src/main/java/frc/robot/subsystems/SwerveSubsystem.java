@@ -4,11 +4,9 @@
 
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.*;
 import static edu.wpi.first.units.Units.*;
+import static frc.robot.Constants.*;
 
-import java.io.File;
-import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -18,6 +16,8 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.io.File;
+import java.util.function.Supplier;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
@@ -31,6 +31,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     /**
      * Initialize {@link SwerveDrive} with the directory provided.
+     *
      * @param directory Directory of swerve drive config files.
      */
     public SwerveSubsystem(File directory) {
@@ -54,7 +55,8 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Drive the robot given a chassis field oriented velocity. 
+     * Drive the robot given a chassis field oriented velocity.
+     *
      * @param velocity Velocity according to the field.
      */
     public Command driveFieldOriented(Supplier<ChassisSpeeds> velocity) {
@@ -64,7 +66,8 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Get the swerve drive kinematics object. 
+     * Get the swerve drive kinematics object.
+     *
      * @return {@link SwerveDriveKinematics} of the swerve drive.
      */
     public SwerveDriveKinematics getKinematics() {
@@ -73,8 +76,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
     /**
      * Resets odometry to the given pose. Gyro angle and module positions do not need to be reset when calling this
-     * method.  However, if either gyro angle or module position is reset, this must be called in order for odometry to
+     * method. However, if either gyro angle or module position is reset, this must be called in order for odometry to
      * keep working.
+     *
      * @param initialHolonomicPose The pose to set the odometry to.
      */
     public void resetOdometry(Pose2d initialHolonomicPose) {
@@ -83,6 +87,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     /**
      * Gets the current pose (position and rotation) of the robot, as reported by odometry.
+     *
      * @return The robot's pose
      */
     public Pose2d getPose() {
@@ -91,6 +96,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     /**
      * Post the trajectory to the field.
+     *
      * @param trajectory The trajectory to post.
      */
     public void postTrajectory(Trajectory trajectory) {
@@ -104,6 +110,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     /**
      * Checks if the alliance is red, defaults to false if alliance isn't available.
+     *
      * @return true if the red alliance, false if blue. Defaults to false if none is available.
      */
     public boolean isRedAlliance() {
@@ -113,12 +120,14 @@ public class SwerveSubsystem extends SubsystemBase {
 
     /**
      * This will zero (calibrate) the robot to assume the current position is facing forward.
+     *
      * <p>If red alliance rotate the robot 180 after the drivebase zero command.
      */
     public void zeroGyroWithAlliance() {
         if (isRedAlliance()) {
             zeroGyro();
-            resetOdometry(new Pose2d(getPose().getTranslation(), Rotation2d.fromDegrees(180))); // Set the pose 180 degrees.
+            resetOdometry(
+                    new Pose2d(getPose().getTranslation(), Rotation2d.fromDegrees(180))); // Set the pose 180 degrees.
         } else {
             zeroGyro();
         }
@@ -126,6 +135,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     /**
      * Sets the drive motors to brake/coast mode.
+     *
      * @param brake True to set motors to brake mode, false for coast.
      */
     public void setMotorBrake(boolean brake) {
@@ -135,6 +145,7 @@ public class SwerveSubsystem extends SubsystemBase {
     /**
      * Gets the current yaw angle of the robot, as reported by the swerve pose estimator in the underlying drivebase.
      * Note, this is not the raw gyro reading, this may be corrected from calls to resetOdometry().
+     *
      * @return The yaw angle
      */
     public Rotation2d getHeading() {
@@ -143,6 +154,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     /**
      * Gets the current field-relative velocity (x, y and omega) of the robot.
+     *
      * @return A ChassisSpeeds object of the current field-relative velocity.
      */
     public ChassisSpeeds getFieldVelocity() {
@@ -151,6 +163,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     /**
      * Gets the current velocity (x, y and omega) of the robot.
+     *
      * @return A {@link ChassisSpeeds} object of the current velocity.
      */
     public ChassisSpeeds getRobotVelocity() {
@@ -159,6 +172,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     /**
      * Get the {@link SwerveController} in the swerve drive.
+     *
      * @return {@link SwerveController} from the {@link SwerveDrive}.
      */
     public SwerveController getSwerveController() {
@@ -172,6 +186,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     /**
      * Gets the current pitch angle of the robot, as reported by the IMU.
+     *
      * @return The heading as a {@link Rotation2d} angle.
      */
     public Rotation2d getPitch() {
@@ -180,6 +195,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     /**
      * Gets the swerve drive object.
+     *
      * @return {@link SwerveDrive}
      */
     public SwerveDrive getSwerveDrive() {

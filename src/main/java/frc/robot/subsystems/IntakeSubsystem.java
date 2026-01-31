@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
-    
+
     private final PWMSparkMax topShooterMotor;
     private final PWMSparkMax bottomShooterMotor;
 
@@ -28,6 +28,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     /**
      * Sets the speed of the shooter motors.
+     *
      * @param speed The speed to set the shooter motors to, between -1.0 and 1.0.
      */
     private void setShooterSpeed(double speed) {
@@ -37,13 +38,14 @@ public class IntakeSubsystem extends SubsystemBase {
 
     /**
      * Sets the speed of the intake motors.
+     *
      * @param speed The speed to set the intake motors to, between -1.0 and 1.0.
      */
     private void setIntakeSpeeds(double speed) {
         bumperIntakeMotor.set(speed);
         armIntakeMotor.set(-speed);
     }
-    
+
     /** Runs the intake motors if the limit switch is not pressed. */
     public void runIntakes() {
         if (!intakeLimitSwitch.get()) {
@@ -68,7 +70,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public void runShooters() {
         setShooterSpeed(1.0);
     }
-    
+
     /** Stops both shooters. */
     public void stopShooters() {
         topShooterMotor.stopMotor();

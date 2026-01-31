@@ -2,22 +2,14 @@ package frc.robot.subsystems.arm;
 
 import static frc.robot.Constants.ArmConstants.*;
 
-import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.AutoLog;
-import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.ArmConstants.ArmStates;
-import frc.robot.subsystems.arm.ArmIO.ArmInputs;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 public class ArmSubsystem extends SubsystemBase {
-    
+
     private final ArmInputsAutoLogged inputs;
     private final ArmIO io;
 
@@ -41,8 +33,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public Command goToSetpointCommand(double setpoint) {
-        return runOnce(() -> controller.setSetpoint(
-                        MathUtil.clamp(setpoint, 0, 250)))
+        return runOnce(() -> controller.setSetpoint(MathUtil.clamp(setpoint, 0, 250)))
                 .andThen(run(() -> {
                     double output = controller.calculate(setpoint);
                     io.setSpeed(output);
@@ -81,54 +72,4 @@ public class ArmSubsystem extends SubsystemBase {
         controller.reset();
         io.stop();
     }
-
-
-
-
-
-
-    /** ----- Arm State Management ----- */
-
-    // private void maintainArmState() {
-    //     if (isTopLimitSwitchPressed() && isBottomLimitSwitchPressed()) {
-    //         stopMotors();
-    //     } else if (isTopLimitSwitchPressed()) {
-    //         handleTopLimitSwitchPressed();
-    //     } else if (isBottomLimitSwitchPressed()) {
-    //         handleBottomLimitSwitchPressed();
-    //     } else {
-    //         controlArm();
-    //     }
-    // }
-
-    // private void controlArm() {
-    //     double output = controller.calculate(getEncoderValue(), getSetpoint());
-
-    //     if (atSetpoint()) {
-    //         stopMotors();
-    //     } else {
-    //         setMotorSpeeds(output);
-    //     }
-    // }
-
-
-    // private void handleTopLimitSwitchPressed() {
-    //     if (getSetpoint() >= getEncoderValue()) {
-    //         stopMotors();
-    //         setSetpoint(getEncoderValue());
-    //     } else {
-    //         controlArm();
-    //     }
-    // }
-
-    // private void handleBottomLimitSwitchPressed() {
-    //     resetEncoder();
-
-    //     if (getSetpoint() <= 0) {
-    //         stopMotors();
-    //         setSetpoint(0);
-    //     } else {
-    //         controlArm();
-    //     }
-    // }
 }

@@ -11,7 +11,8 @@ import swervelib.math.Matter;
 
 public final class Constants {
     public static final Mass kRobotMass = Pounds.of(130.0);
-    public static final Matter kRobotChassis = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), kRobotMass.in(Kilograms));
+    public static final Matter kRobotChassis =
+            new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), kRobotMass.in(Kilograms));
     public static final Time kLoopTime = Seconds.of(0.13);
     public static final LinearVelocity kMaxVelocity = MetersPerSecond.of(4.0);
     public static final Time kWheelLockTime = Seconds.of(10.0);

@@ -4,11 +4,11 @@ import static frc.robot.Constants.ArmConstants.*;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 
@@ -31,8 +31,10 @@ public class ArmIOReal implements ArmIO {
         rightGearbox2 = new SparkMax(kRightGearbox2, MotorType.kBrushed);
 
         SparkBaseConfig leaderConfig = new SparkMaxConfig().idleMode(IdleMode.kBrake);
-        SparkBaseConfig leftConfig = new SparkMaxConfig().idleMode(IdleMode.kBrake).follow(leftGearbox1, false);
-        SparkBaseConfig rightConfig = new SparkMaxConfig().idleMode(IdleMode.kBrake).follow(leftGearbox1, true);
+        SparkBaseConfig leftConfig =
+                new SparkMaxConfig().idleMode(IdleMode.kBrake).follow(leftGearbox1, false);
+        SparkBaseConfig rightConfig =
+                new SparkMaxConfig().idleMode(IdleMode.kBrake).follow(leftGearbox1, true);
 
         leftGearbox1.configure(leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         leftGearbox2.configure(leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

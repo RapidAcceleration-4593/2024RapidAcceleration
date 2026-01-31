@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class ShootCommand extends Command {
-    
+
     private final IntakeSubsystem intakeSubsystem;
     private final Timer shooterTimer;
     private final Timer intakeTimer;
@@ -14,7 +14,7 @@ public class ShootCommand extends Command {
     public ShootCommand(IntakeSubsystem subsystem) {
         this.intakeSubsystem = subsystem;
         addRequirements(subsystem);
-        
+
         shooterTimer = new Timer();
         intakeTimer = new Timer();
     }
@@ -38,7 +38,7 @@ public class ShootCommand extends Command {
             intakeStarted = true;
         }
     }
-    
+
     @Override
     public boolean isFinished() {
         return intakeStarted && intakeTimer.hasElapsed(1.0);
