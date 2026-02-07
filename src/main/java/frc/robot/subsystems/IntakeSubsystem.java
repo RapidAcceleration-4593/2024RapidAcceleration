@@ -1,7 +1,9 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.*;
 import static frc.robot.Constants.IntakeConstants.*;
 
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,29 +29,29 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     /**
-     * Sets the speed of the shooter motors.
+     * Sets the voltage of the shooter motors.
      *
-     * @param speed The speed to set the shooter motors to, between -1.0 and 1.0.
+     * @param speed The speed to set the shooter motors to, between -12.0 and 12.0.
      */
-    private void setShooterSpeed(double speed) {
-        topShooterMotor.set(speed);
-        bottomShooterMotor.set(speed);
+    private void setShooterSpeed(Voltage volts) {
+        topShooterMotor.setVoltage(volts);
+        bottomShooterMotor.setVoltage(volts);
     }
 
     /**
      * Sets the speed of the intake motors.
      *
-     * @param speed The speed to set the intake motors to, between -1.0 and 1.0.
+     * @param speed The speed to set the intake motors to, between -12.0 and 12.0.
      */
-    private void setIntakeSpeeds(double speed) {
-        bumperIntakeMotor.set(speed);
-        armIntakeMotor.set(-speed);
+    private void setIntakeSpeeds(Voltage volts) {
+        bumperIntakeMotor.setVoltage(volts);
+        armIntakeMotor.setVoltage(volts.times(-1));
     }
 
     /** Runs the intake motors if the limit switch is not pressed. */
     public void runIntakes() {
         if (!intakeLimitSwitch.get()) {
-            setIntakeSpeeds(1.0);
+            setIntakeSpeeds(Volts.of(12.0));
         } else {
             stopIntakes();
         }
@@ -57,7 +59,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     /** Runs the intake on the Arm. */
     public void runArmIntake() {
-        armIntakeMotor.set(-1.0);
+        armIntakeMotor.setVoltage(Volts.of(-12.0));
     }
 
     /** Stops the intake motors. */
@@ -68,7 +70,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     /** Runs both shooters. */
     public void runShooters() {
-        setShooterSpeed(1.0);
+        setShooterSpeed(Volts.of(12.0));
     }
 
     /** Stops both shooters. */

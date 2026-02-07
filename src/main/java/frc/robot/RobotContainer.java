@@ -24,6 +24,7 @@ public class RobotContainer {
 
     // Controller(s)
     private final CommandXboxController controller;
+    private final CommandXboxController secondaryController;
 
     public RobotContainer() {
         swerve = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
@@ -31,6 +32,7 @@ public class RobotContainer {
         intake = new IntakeSubsystem();
 
         controller = new CommandXboxController(kControllerPort);
+        secondaryController = new CommandXboxController(1);
 
         configureBindings();
     }
@@ -39,16 +41,26 @@ public class RobotContainer {
         swerve.setDefaultCommand(driveCommand());
 
         controller.back().onTrue(Commands.runOnce(swerve::zeroGyro));
+        secondaryController.back().onTrue(Commands.runOnce(swerve::zeroGyro));
 
         controller.povDown().onTrue(arm.goToSetpointCommand(0));
         controller.povLeft().onTrue(arm.goToSetpointCommand(40));
         controller.povRight().onTrue(arm.goToSetpointCommand(100));
         controller.povUp().onTrue(arm.goToSetpointCommand(250));
 
+        secondaryController.povDown().onTrue(arm.goToSetpointCommand(0));
+        secondaryController.povLeft().onTrue(arm.goToSetpointCommand(40));
+        secondaryController.povRight().onTrue(arm.goToSetpointCommand(100));
+        secondaryController.povUp().onTrue(arm.goToSetpointCommand(250));
+
         controller.leftBumper().whileTrue(new IntakeCommand(intake));
         controller.rightBumper().onTrue(new ShootCommand(intake));
 
+        secondaryController.leftBumper().whileTrue(new IntakeCommand(intake));
+        secondaryController.rightBumper().onTrue(new ShootCommand(intake));
+
         controller.x().whileTrue(new ContinuousShootCommand(intake));
+        secondaryController.x().whileTrue(new ContinuousShootCommand(intake));
     }
 
     public void setMotorBrake(boolean brake) {
