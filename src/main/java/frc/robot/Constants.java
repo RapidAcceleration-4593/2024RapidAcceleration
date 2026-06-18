@@ -47,7 +47,7 @@ public final class Constants {
     public static class OperatorConstants {
         public static final int kControllerPort = 0;
         public static final double kDeadband = 0.1;
-        public static final double kTurnConstant = 3.0;
-        public static final double kTranslationScale = 0.4593;
+        public static final double kTurnConstant = 6.0;
+        public static final double kTranslationScale = 1.0;
     }
 }

@@ -26,6 +26,9 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class SwerveSubsystem extends SubsystemBase {
 
+    public boolean zoomMode = false;
+    public boolean turnboMode = false;
+
     /** Swerve Drive Object. */
     private final SwerveDrive swerveDrive;
 

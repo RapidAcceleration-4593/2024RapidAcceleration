@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.ZoomModeCommand;
 import frc.robot.commands.intake.ContinuousShootCommand;
 import frc.robot.commands.intake.IntakeCommand;
 import frc.robot.commands.intake.ShootCommand;
@@ -38,6 +39,8 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+        controller.a().whileTrue(new ZoomModeCommand(swerve));
+
         swerve.setDefaultCommand(driveCommand());
 
         controller.back().onTrue(Commands.runOnce(swerve::zeroGyro));
@@ -69,8 +72,10 @@ public class RobotContainer {
 
     private Command driveCommand() {
         SwerveInputStream driveAngularVelocity = SwerveInputStream.of(
-                        swerve.getSwerveDrive(), () -> -controller.getLeftY(), () -> -controller.getLeftX())
-                .withControllerRotationAxis(() -> -controller.getRightX())
+                        swerve.getSwerveDrive(),
+                        () -> -controller.getLeftY() * (swerve.zoomMode ? 1.0 : 0.4),
+                        () -> -controller.getLeftX() * (swerve.zoomMode ? 1.0 : 0.4))
+                .withControllerRotationAxis(() -> -controller.getRightX() / (swerve.turnboMode ? 1.0 : 2.0))
                 .deadband(kDeadband)
                 .scaleTranslation(kTranslationScale)
                 .allianceRelativeControl(true);
